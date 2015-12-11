@@ -1,20 +1,21 @@
 <?php
-namespace minphp\Pagination;
+namespace Minphp\Pagination\Tests;
 
-use \PHPUnit_Framework_TestCase;
+use Minphp\Pagination\Pagination;
+use PHPUnit_Framework_TestCase;
 
 /**
- * @coversDefaultClass \minphp\Pagination\Pagination
+ * @coversDefaultClass \Minphp\Pagination\Pagination
  */
 class PaginationTest extends PHPUnit_Framework_TestCase
 {
     /**
      * @covers ::__construct
      * @covers ::mergeArrays
-     * @uses \minphp\Pagination\Pagination::setGet
+     * @uses \Minphp\Pagination\Pagination::setGet
      */
     public function testConstruct()
     {
-        $this->assertInstanceOf('\minphp\Pagination\Pagination', new Pagination());
+        $this->assertInstanceOf('\Minphp\Pagination\Pagination', new Pagination());
     }
 }

@@ -1,8 +1,8 @@
 <?php
-namespace minphp\Pagination;
+namespace Minphp\Pagination;
 
-use \minphp\Html\Html;
-use \minphp\Language\Language;
+use Minphp\Html\Html;
+use Minphp\Language\Language;
 
 /**
  * Provides helper methods for dealing with Page Navigation content.
@@ -19,22 +19,22 @@ class Pagination extends Html
      * @var string The string to use as the end of line character
      */
     private $eol = "\n";
-    
+
     /**
      * @var boolean Whether or not to return output from various pagination methods
      */
     private $return_output = false;
-    
+
     /**
      * @var array Format settings
      */
     private $settings;
-    
+
     /**
      * @var array All get parameters for this request
      */
     private $get;
-    
+
     /**
      * Sets default settings
      *
@@ -49,9 +49,9 @@ class Pagination extends Html
             null,
             dirname(__FILE__) . DIRECTORY_SEPARATOR . "language" . DIRECTORY_SEPARATOR
         );
-        
+
         $this->setGet($get);
-        
+
         $this->settings = array(
             // Wrapper to surround the link set
             'wrapper' => array(
@@ -136,10 +136,10 @@ class Pagination extends Html
             // key => value pairs of additional uri query parameters (if set, overrides $get params)
             'params' => array()
         );
-            
+
         $this->settings = $this->mergeArrays($this->settings, $format);
     }
-    
+
     /**
      * Extends one array using another to overwrite existing values. Recursively merges
      * data.
@@ -159,7 +159,7 @@ class Pagination extends Html
         }
         return $arr1;
     }
-    
+
     /**
      * Set all GET parameters for this pagination instance
      *
@@ -176,7 +176,7 @@ class Pagination extends Html
         }
         $this->get = $get;
     }
-    
+
     /**
      * Sets the end of line character to use
      *
@@ -186,7 +186,7 @@ class Pagination extends Html
     {
         $this->eol = $this->_($eol, true);
     }
-    
+
     /**
      * Sets the format settings
      *
@@ -198,7 +198,7 @@ class Pagination extends Html
             $this->settings = $this->mergeArrays($this->settings, $format);
         }
     }
-    
+
     /**
      * Returns whether or not pagination should be shown
      *
@@ -212,13 +212,13 @@ class Pagination extends Html
         } else {
             $pages = ceil($this->settings['total_results'] / $this->settings['results_per_page']);
         }
-            
+
         if ($this->settings['show'] == "never" || ($pages <= 1 && $this->settings['show'] == "if_needed")) {
             return false;
         }
         return true;
     }
-    
+
     /**
      * Builds the content of the pagination and optionally outputs it.
      *
@@ -229,47 +229,47 @@ class Pagination extends Html
         // Set data to return, because we don't want to echo until we have everything built
         $output = $this->return_output;
         $this->setOutput(true);
-        
+
         // Merge get params with param settings if set to
         if ($this->settings['merge_get']) {
             $this->settings['params'] = $this->mergeArrays($this->get, (array)$this->settings['params']);
         }
-    
+
         if (isset($this->settings['total_pages']) && $this->settings['total_pages'] > 0) {
             $pages = $this->settings['total_pages'];
         } else {
             $pages = ceil($this->settings['total_results'] / $this->settings['results_per_page']);
         }
-            
+
         // Ensure nav should be shown
         if (!$this->hasPages()) {
             return null;
         }
-        
+
         // Set the wrapper tag
         $html = $this->openTag($this->settings['wrapper']);
-        
+
         // Begin with surround tag
         $html .= $this->openTag($this->settings['navigation']['surround']);
-        
+
         $show = $this->settings['pages_to_show'];
         $per_page = (isset($settings['per_page']) && !empty($settings['per_page']))
             ? $settings['per_page']
             : $this->settings['results_per_page'];
         $current_page = $this->currentPage();
-        
+
         $page_label = $this->settings['uri_labels']['page'];
         $per_page_label = $this->settings['uri_labels']['per_page'];
         $settings[$page_label] = $current_page;
         $settings[$per_page_label] = $per_page;
-        
+
         if ($pages > 0) {
             if ($this->settings['pages_to_show'] > 0) {
                 $current_page = min(max(1, $current_page), $pages);
-                
+
                 $start = $current_page - floor($show/2);
                 $end = $current_page + floor($show/2) - ($show%2 == 0 ? 1 : 0);
-                
+
                 if ($start < 1) {
                     $start = 1;
                     $end = min($pages, $show);
@@ -278,13 +278,13 @@ class Pagination extends Html
                     $end = $pages;
                     $start = max($end - $show + 1, 1);
                 }
-                
+
                 $prev = max($current_page - 1, $start);
                 $next = min($current_page + 1, $end);
-    
+
                 $prev_needed = $current_page > 1;
                 $next_needed = $current_page < $pages;
-    
+
                 // build first, prev links, merge with disabled settings if not needed but shown
                 if ($this->settings['navigation']['first']['show'] == "always"
                     || ($this->settings['navigation']['first']['show'] == "if_needed" && $prev_needed)
@@ -312,7 +312,7 @@ class Pagination extends Html
                     }
                     $html .= $this->createNavItem($this->settings['navigation']['prev'], $prev);
                 }
-    
+
                 // build page number links
                 for ($i=$start; $i<=$end; $i++) {
                     if ($current_page == $i) {
@@ -321,7 +321,7 @@ class Pagination extends Html
                         $html .= $this->createNavItem($this->settings['navigation']['numerical'], $i);
                     }
                 }
-                
+
                 // build next, last links, merge with disabled settings if not needed but shown
                 if ($this->settings['navigation']['next']['show'] == "always"
                     || ($this->settings['navigation']['next']['show'] == "if_needed" && $next_needed)
@@ -349,18 +349,18 @@ class Pagination extends Html
                 }
             }
         }
-        
+
         // Close surround tag
         $html .= $this->closeTag($this->settings['navigation']['surround']);
-        
+
         // Close the wrapper tag
         $html .= $this->closeTag($this->settings['wrapper']);
-        
+
         // Restore the original output type
         $this->setOutput($output);
         return $this->output($html);
     }
-    
+
     /**
      * Finds the current page based on the current URI and/or query parameters
      *
@@ -370,7 +370,7 @@ class Pagination extends Html
     {
         $page = 1;
         $uri = $this->getUri();
-        
+
         $temp = explode("/", $uri);
         $index = null;
         // Look for the index partition where the page label is located
@@ -381,17 +381,17 @@ class Pagination extends Html
                 break;
             }
         }
-        
+
         // Parse the page number out of the partition
         if ($index && isset($temp[$index])) {
             $page = $temp[$index];
         } elseif (isset($this->get[$this->settings['uri_labels']['page']])) {
             $page = $this->get[$this->settings['uri_labels']['page']];
         }
-        
+
         return $page;
     }
-    
+
     /**
      * Creates a page nav item
      *
@@ -407,7 +407,7 @@ class Pagination extends Html
             . $this->closeTag($nav_item)
         );
     }
-    
+
     /**
      * Opens a new tag
      *
@@ -423,7 +423,7 @@ class Pagination extends Html
         }
         return $this->output($html);
     }
-    
+
     /**
      * Closes a tag
      *
@@ -438,7 +438,7 @@ class Pagination extends Html
         }
         return $this->output($html);
     }
-    
+
     /**
      * Creates a new link
      *
@@ -455,10 +455,10 @@ class Pagination extends Html
                 (isset($link['name']) ? $this->_($link['name'], true) : $this->_($page, true)) .
                 "</a>" . $this->eol;
         }
-        
+
         return $this->output($html);
     }
-    
+
     /**
      * Get the before pagination URI
      *
@@ -482,11 +482,11 @@ class Pagination extends Html
                 $query .= ($query == null ? "?" : "&") . $key . "=" . $value;
             }
         }
-    
+
         // Build the URI
         return $this->settings['uri'] . (substr($this->settings['uri'], -1) != "/" ? "/" : "") . $query;
     }
-    
+
     /**
      * Create the URI for the current page number, replacing any labels as needed.
      *
@@ -506,7 +506,7 @@ class Pagination extends Html
             $uri
         );
     }
-    
+
     /**
      * Set whether to return $output generated by these methods, or to echo it out instead
      *
@@ -520,7 +520,7 @@ class Pagination extends Html
             $this->return_output = false;
         }
     }
-    
+
     /**
      * Handles whether to output or return $html
      *
