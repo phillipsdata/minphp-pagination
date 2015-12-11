@@ -1,4 +1,4 @@
-# minphp/Pagination
+# Minphp/Pagination
 
 [![Build Status](https://travis-ci.org/phillipsdata/minphp-pagination.svg?branch=master)](https://travis-ci.org/phillipsdata/minphp-pagination)
 
@@ -9,7 +9,7 @@ Pagination Helper.
 Install via composer:
 
 ```sh
-composer require minphp/pagination:dev-master
+composer require minphp/pagination
 ```
 
 ## Basic Usage

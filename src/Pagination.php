@@ -2,7 +2,6 @@
 namespace Minphp\Pagination;
 
 use Minphp\Html\Html;
-use Minphp\Language\Language;
 
 /**
  * Provides helper methods for dealing with Page Navigation content.
@@ -43,13 +42,6 @@ class Pagination extends Html
      */
     public function __construct(array $get = array(), array $format = array())
     {
-        // Load the language for the pagination
-        Language::loadLang(
-            "pagination",
-            null,
-            dirname(__FILE__) . DIRECTORY_SEPARATOR . "language" . DIRECTORY_SEPARATOR
-        );
-
         $this->setGet($get);
 
         $this->settings = array(
@@ -62,7 +54,7 @@ class Pagination extends Html
                 // First page link
                 'first' => array(
                     'tag' => "li",
-                    'name' => Language::_("Pagination.first_link", true),
+                    'name' => "← First",
                     'attributes' => array(),
                     'link_attributes' => array(),
                     'show' => "if_needed", // options: if_needed, never, always
@@ -71,7 +63,7 @@ class Pagination extends Html
                 // Last page link
                 'last' => array(
                     'tag' => "li",
-                    'name' => Language::_("Pagination.last_link", true),
+                    'name' => "Last →",
                     'attributes' => array(),
                     'link_attributes' => array(),
                     'show' => "if_needed", // options: if_needed, never, always
@@ -80,7 +72,7 @@ class Pagination extends Html
                 // Next page link
                 'next' => array(
                     'tag' => "li",
-                    'name' => Language::_("Pagination.next_link", true),
+                    'name' => "Next",
                     'attributes' => array(),
                     'link_attributes' => array(),
                     'show' => "if_needed", // options: if_needed, never, always
@@ -89,7 +81,7 @@ class Pagination extends Html
                 // Previous page link
                 'prev' => array(
                     'tag' => "li",
-                    'name' => Language::_("Pagination.prev_link", true),
+                    'name' => "Prev",
                     'attributes' => array(),
                     'link_attributes' => array(),
                     'show' => "if_needed", // options: if_needed, never, always
