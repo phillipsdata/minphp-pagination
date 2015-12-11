@@ -21,6 +21,9 @@
         "satooshi/php-coveralls": "dev-master"
     },
     "autoload": {
-        "psr-4": {"minphp\\Pagination\\": "src"}
+        "psr-4": {"Minphp\\Pagination\\": "src"}
+    },
+    "autoload-dev": {
+        "psr-4": {"Minphp\\Pagination\\Tests\\": "tests"}
     }
 }
