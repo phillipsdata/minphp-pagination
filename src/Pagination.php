@@ -369,16 +369,24 @@ class Pagination extends Html
         foreach ($temp as $i => $value) {
             if ($value == "[" . $this->settings['uri_labels']['page'] . "]") {
                 $index = $i;
-                $temp = explode("/", $_SERVER['REQUEST_URI']);
+                // Strip query string before splitting so that ?sort=...
+                // cannot land in the page-number position
+                $request_path = parse_url(
+                    $_SERVER['REQUEST_URI'] ?? '',
+                    PHP_URL_PATH
+                ) ?? '';
+                $temp = explode("/", $request_path);
                 break;
             }
         }
 
         // Parse the page number out of the partition
-        if ($index && isset($temp[$index])) {
-            $page = $temp[$index];
-        } elseif (isset($this->get[$this->settings['uri_labels']['page']])) {
-            $page = $this->get[$this->settings['uri_labels']['page']];
+        if ($index !== null && isset($temp[$index]) && is_numeric($temp[$index])) {
+            $page = (int) $temp[$index];
+        } elseif (isset($this->get[$this->settings['uri_labels']['page']])
+            && is_numeric($this->get[$this->settings['uri_labels']['page']])
+        ) {
+            $page = (int) $this->get[$this->settings['uri_labels']['page']];
         }
 
         return $page;
